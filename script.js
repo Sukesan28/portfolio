@@ -2,14 +2,79 @@ let currentFilter = 'all';
 let currentSearch = '';
 let editingProjectId = null;
 
+let allProjects = [
+    {
+        id: 1,
+        title: "Smart ATM",
+        category: "java",
+        tags: ["Java", "JDBC", "MySQL"],
+        description: "The Smart ATM Project is a Java-based application that simulates real-world ATM operations. It allows users to create accounts, deposit and withdraw money, check balance, and view mini statements. The system is connected to a MySQL database using JDBC for secure data storage and retrieval.",
+        technologies: "Java, JDBC, MySQL",
+        github: "",
+        caseStudy: "",
+        media: ""
+    },
+    {
+        id: 2,
+        title: "Portfolio",
+        category: "html/css/js",
+        tags: ["HTML", "CSS", "JavaScript"],
+        description: "A clean portfolio featuring a styled HTML button with Font Awesome icons for seamless navigation to the home page. Utilizes inline JavaScript for functionality, with potential for enhanced maintainability and accessibility.",
+        technologies: "HTML,CSS,JavaScript",
+        github: "",
+        caseStudy: "",
+        media: ""
+    },
+    {
+        id: 3,
+        title: "Simple Calculator",
+        category: "html/css/js",
+        tags: ["HTML", "CSS", "JavaScript"],
+        description: "This is a modern web-based Calculator built with HTML, CSS, and JavaScript. It supports basic arithmetic operations, percentage calculation, and includes features like clear, delete, and keyboard input support for a smooth user experience.",
+        technologies: "HTML, CSS, JavaScript",
+        github: "",
+        caseStudy: "",
+        media: ""
+    },
+    {
+        id: 4,
+        title: "Rock Paper Scissors Game",
+        category: "html/css/js",
+        tags: ["HTML", "CSS", "JavaScript"],
+        description: "A fun and interactive game built with HTML, CSS, and JavaScript, where you play Rock, Paper, or Scissors against the computer. It features a modern UI with smooth animations for an engaging experience.",
+        technologies: "HTML,CSS,JavaScript",
+        github: "",
+        caseStudy: "",
+        media: ""
+    },
+    {
+        id: 5,
+        title: "Object Detection using YOLO",
+        category: "python",
+        tags: ["Python"],
+        description: "A real-time object detection system using YOLOv8 and OpenCV that can detect and annotate multiple objects in images or videos, with optional audio feedback for detected objects.",
+        technologies: "Python",
+        github: "",
+        caseStudy: "",
+        media: ""
+    }
+];
+
 async function fetchProjects() {
     try {
         console.log('Fetching projects with filter:', currentFilter, 'and search:', currentSearch);
-        const response = await fetch(`/api/projects?category=${currentFilter}&search=${encodeURIComponent(currentSearch)}`);
-        if (!response.ok) throw new Error('Failed to fetch projects');
-        const projects = await response.json();
+        let projects = allProjects.filter(p => currentFilter === 'all' || p.category === currentFilter);
+        if (currentSearch) {
+            const searchLower = currentSearch.toLowerCase();
+            projects = projects.filter(p => 
+                p.title.toLowerCase().includes(searchLower) ||
+                p.description.toLowerCase().includes(searchLower) ||
+                p.tags.some(t => t.toLowerCase().includes(searchLower)) ||
+                p.technologies.toLowerCase().includes(searchLower)
+            );
+        }
         renderProjects(projects);
-        updateCounts(projects);
+        updateCounts(allProjects);
     } catch (error) {
         console.error("Error fetching projects:", error);
         document.getElementById('projectsGrid').innerHTML = '<p>Error loading projects...</p>';
@@ -47,12 +112,9 @@ function renderProjects(projects) {
 function updateCounts(projects) {
     const counts = {
         all: projects.length,
-        ml: projects.filter(p => p.category === 'ml').length,
-        dl: projects.filter(p => p.category === 'dl').length,
-        genai: projects.filter(p => p.category === 'genai').length,
-        cv: projects.filter(p => p.category === 'cv').length,
-        nlp: projects.filter(p => p.category === 'nlp').length,
-        analytics: projects.filter(p => p.category === 'analytics').length
+        java: projects.filter(p => p.category === 'java').length,
+        sql: projects.filter(p => p.category === 'sql').length,
+        'html/css/js': projects.filter(p => p.category === 'html/css/js').length
     };
     Object.keys(counts).forEach(category => {
         const countElement = document.getElementById(`count-${category}`);
@@ -78,12 +140,9 @@ function closeProjectForm() {
     }
 }
 
-async function editProject(id) {
-    try {
-        console.log('Editing project ID:', id);
-        const response = await fetch(`/api/projects/${id}`);
-        if (!response.ok) throw new Error('Failed to fetch project');
-        const project = await response.json();
+function editProject(id) {
+    const project = allProjects.find(p => p.id === id);
+    if (project) {
         editingProjectId = id;
         document.getElementById('projectTitle').value = project.title;
         document.getElementById('projectCategory').value = project.category;
@@ -93,32 +152,24 @@ async function editProject(id) {
         document.getElementById('projectGithub').value = project.github || '';
         document.getElementById('projectCaseStudy').value = project.caseStudy || '';
         toggleProjectForm();
-    } catch (error) {
-        console.error("Error fetching project for edit:", error);
+    } else {
         showFeedback('Failed to load project for editing.');
     }
 }
 
-async function deleteProject(id) {
+function deleteProject(id) {
     if (confirm('Are you sure you want to delete this project?')) {
-        try {
-            console.log('Deleting project ID:', id);
-            const response = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Failed to delete project');
-            fetchProjects();
-            showFeedback('Project deleted successfully.');
-        } catch (error) {
-            console.error("Error deleting project:", error);
-            showFeedback('Failed to delete project.');
-        }
+        allProjects = allProjects.filter(p => p.id !== id);
+        fetchProjects();
+        showFeedback('Project deleted successfully.');
     }
 }
 
 function filterProjects(category) {
     console.log('Filtering projects by category:', category);
-    currentFilter = category;
+    currentFilter = category.toLowerCase();
     document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.category === category);
+        btn.classList.toggle('active', btn.dataset.category.toLowerCase() === currentFilter);
     });
     fetchProjects();
 }
@@ -237,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('projectModal')?.addEventListener('click', (e) => {
             if (e.target === document.getElementById('projectModal')) closeProjectForm();
         });
-        document.getElementById('projectForm')?.addEventListener('submit', async function(e) {
+        document.getElementById('projectForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
             const title = document.getElementById('projectTitle').value.trim();
             const category = document.getElementById('projectCategory').value;
@@ -245,30 +296,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 showFeedback('Title and Category are required!');
                 return;
             }
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('category', category);
-            formData.append('tags', document.getElementById('projectTags').value.split(',').map(tag => tag.trim()));
-            formData.append('description', document.getElementById('projectDescription').value);
-            formData.append('technologies', document.getElementById('projectTechnologies').value);
-            formData.append('github', document.getElementById('projectGithub').value);
-            formData.append('caseStudy', document.getElementById('projectCaseStudy').value);
             const mediaFile = document.getElementById('projectMedia').files[0];
-            if (mediaFile) formData.append('media', mediaFile);
-
-            try {
-                console.log('Submitting project form, editing ID:', editingProjectId);
-                const url = editingProjectId ? `/api/projects/${editingProjectId}` : '/api/projects';
-                const method = editingProjectId ? 'PUT' : 'POST';
-                const response = await fetch(url, { method, body: formData });
-                if (!response.ok) throw new Error(`Failed to ${editingProjectId ? 'update' : 'add'} project`);
-                closeProjectForm();
-                fetchProjects();
-                showFeedback(`Project ${editingProjectId ? 'updated' : 'added'} successfully!`);
-            } catch (error) {
-                console.error("Error submitting form:", error);
-                showFeedback(`Failed to ${editingProjectId ? 'update' : 'add'} project.`);
+            const newProject = {
+                title,
+                category,
+                tags: document.getElementById('projectTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                description: document.getElementById('projectDescription').value,
+                technologies: document.getElementById('projectTechnologies').value,
+                github: document.getElementById('projectGithub').value,
+                caseStudy: document.getElementById('projectCaseStudy').value,
+                media: mediaFile ? URL.createObjectURL(mediaFile) : ''
+            };
+            if (editingProjectId) {
+                const index = allProjects.findIndex(p => p.id === editingProjectId);
+                if (index !== -1) {
+                    newProject.id = editingProjectId;
+                    allProjects[index] = newProject;
+                }
+            } else {
+                newProject.id = allProjects.length > 0 ? Math.max(...allProjects.map(p => p.id)) + 1 : 1;
+                allProjects.push(newProject);
             }
+            closeProjectForm();
+            fetchProjects();
+            showFeedback(`Project ${editingProjectId ? 'updated' : 'added'} successfully!`);
         });
         fetchProjects();
     }
