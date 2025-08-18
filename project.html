@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Projects</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0d0d1a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .section-title { font-size: 2rem; margin-bottom: 0.5rem; }
+        .title-underline { width: 6rem; height: 3px; background: #00ffff; margin: 0.5rem auto; }
+        .contact-section, .projects-section { padding: 2rem 0; }
+        .contact-links, .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .contact-card, .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .contact-card:hover, .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+        .contact-icon i { font-size: 2rem; color: #00ffff; }
+        .contact-content h4 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .contact-content p { font-size: 1rem; color: #b0b0b0; }
+        .project-title { font-size: 1.2rem; font-weight: 600; margin: 0 1rem 0 0; }
+        .project-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.5rem 0;
+        }
+        .project-tech-list { font-size: 0.85rem; color: #b0b0b0; }
+        .project-description { font-size: 0.9rem; color: #ccc; margin: 0; }
+        .project-actions { margin-top: 1rem; display: flex; justify-content: center; gap: 1rem; }
+        .project-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            text-align: center;
+        }
+        .project-btn.primary {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            color: #000;
+        }
+        .project-btn.secondary {
+            background: transparent;
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+        }
+        .project-controls { margin: 2rem 0; text-align: center; }
+        .project-controls button { margin-bottom: 1rem; }
+        .search-container {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto 2rem;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 0.8rem 3rem 0.8rem 1rem;
+            border-radius: 25px;
+            border: 1px solid rgba(0,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        .search-container i {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(0,255,255,0.7);
+        }
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .filter-btn {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(0,255,255,0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background: linear-gradient(45deg, rgba(0,255,255,0.2), rgba(128,0,255,0.2));
+            border-color: #00ffff;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            display: none;
+        }
+        .empty-state i { font-size: 4rem; margin-bottom: 1rem; color: rgba(0, 255, 255, 0.3); }
+        .empty-state h3 { margin-bottom: 0.5rem; }
+        .feedback-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            max-width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Projects Section -->
+        <section class="projects-section">
+            <div class="section-header">
+                <h2 class="section-title">Projects Portfolio</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="project-controls">
+                <button class="project-btn secondary" onclick="window.location.href='index.html'">
+    <i class="fas fa-home"></i> Home
+</button>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search projects...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="category-filter">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="java">Java</button>
+                    <button class="filter-btn" data-category="sql">SQL</button>
+                    <button class="filter-btn" data-category="htmlcssjs">HTML/CSS/JS</button>
+                </div>
+            </div>
+            <div class="projects-grid" id="projectsGrid">
+                <div class="project-card" data-category="java">
+                    <div class="project-content">
+                        <h3 class="project-title">Smart ATM</h3>
+                        <div class="project-tech-list">Java, JDBC, MySQL</div>
+                        <p class="project-description">The Smart ATM Project is a Java-based application that simulates real-world ATM operations. It allows users to create accounts, deposit and withdraw money, check balance, and view mini statements. The system is connected to a MySQL database using JDBC for secure data storage and retrieval.</p>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://github.com/Sukesan28/Smart-ATM-System" class="project-btn primary" target="_blank">Code</a>
+                    </div>
+                </div>
+                <div class="project-card" data-category="htmlcssjs">
+                    <div class="project-content">
+                        <h3 class="project-title">Portfolio</h3>
+                        <div class="project-tech-list">HTML,CSS,JavaScript</div>
+                        <p class="project-description">A clean portfolio featuring a styled HTML button with Font Awesome icons for seamless navigation to the home page. Utilizes inline JavaScript for functionality, with potential for enhanced maintainability and accessibility.</p>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://github.com/Sukesan28/Sukesan-portfolio" class="project-btn primary" target="_blank">Code</a>
+                    </div>
+                </div>
+                <div class="project-card" data-category="htmlcssjs">
+                    <div class="project-content">
+                        <h3 class="project-title">Simple Calculator</h3>
+                        <div class="project-tech-list">HTML, CSS, JavaScript</div>
+                        <p class="project-description">This is a modern web-based Calculator built with HTML, CSS, and JavaScript. It supports basic arithmetic operations, percentage calculation, and includes features like clear, delete, and keyboard input support for a smooth user experience.</p>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://github.com/Sukesan28/Calculator-project" class="project-btn primary" target="_blank">Code</a>
+                    </div>
+                </div>
+                <div class="project-card" data-category="htmlcssjs">
+                    <div class="project-content">
+                        <h3 class="project-title">Rock Paper Scissors Game</h3>
+                        <div class="project-tech-list">HTML,CSS,JavaScript</div>
+                        <p class="project-description">A fun and interactive game built with HTML, CSS, and JavaScript, where you play Rock, Paper, or Scissors against the computer. It features a modern UI with smooth animations for an engaging experience.</p>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://github.com/Sukesan28/Rock-Paper-Scissor-Game" class="project-btn primary" target="_blank">Code</a>
+                    </div>
+                </div>
+                <div class="project-card" data-category="htmlcssjs">
+                    <div class="project-content">
+                        <h3 class="project-title">Object Detection using YOLO</h3>
+                        <div class="project-tech-list">Python</div>
+                        <p class="project-description">A real-time object detection system using YOLOv8 and OpenCV that can detect and annotate multiple objects in images or videos, with optional audio feedback for detected objects.</p>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://github.com/Sukesan28/Object-Detection-Using-YOLO" class="project-btn primary" target="_blank">Code</a>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-folder-open"></i>
+                <h3>No Projects Found</h3>
+                <p>Try adjusting your search or filter criteria!</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        console.log('script loaded at', new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+
+        // Show feedback message
+        function showFeedback(message) {
+            console.log('Showing feedback:', message);
+            const feedback = document.createElement('div');
+            feedback.textContent = message;
+            feedback.className = 'feedback-message';
+            document.body.appendChild(feedback);
+            setTimeout(() => feedback.remove(), 4000);
+        }
+
+        // Adjust heights of visible project cards per row
+        function adjustCardHeights() {
+            console.log('Adjusting project card heights');
+            const grid = document.getElementById('projectsGrid');
+            if (!grid) return;
+            const cards = Array.from(grid.querySelectorAll('.project-card')).filter(c => c.style.display !== 'none');
+            if (!cards.length) return;
+            cards.forEach(c => c.style.height = 'auto');
+            const colCount = parseInt(getComputedStyle(grid).gridTemplateColumns.split(' ').length);
+            for (let i = 0; i < cards.length; i += colCount) {
+                const rowCards = cards.slice(i, i + colCount);
+                let maxHeight = Math.max(...rowCards.map(c => c.offsetHeight));
+                rowCards.forEach(c => c.style.height = maxHeight + 'px');
+            }
+        }
+
+        // Filter projects by category
+        function updateProjectFilter() {
+            console.log('Initializing project filter');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const projects = document.querySelectorAll('.project-card');
+            const emptyState = document.getElementById('emptyState');
+            if (!filterButtons.length || !projects.length || !emptyState) return;
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('Filter button clicked:', btn.dataset.category);
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const cat = btn.dataset.category;
+                    let visible = 0;
+                    projects.forEach(p => {
+                        if (cat === 'all' || p.dataset.category === cat) {
+                            p.style.display = 'flex';
+                            visible++;
+                        } else {
+                            p.style.display = 'none';
+                        }
+                    });
+                    emptyState.style.display = visible === 0 ? 'block' : 'none';
+                    adjustCardHeights();
+                    showFeedback(`Filtered projects by ${cat === 'all' ? 'All' : cat.toUpperCase()}`);
+                });
+            });
+        }
+
+        // Search projects by title
+        function initProjectSearch() {
+            console.log('Initializing project search');
+            const searchInput = document.getElementById('searchInput');
+            const projects = document.querySelectorAll('.project-card');
+            const emptyState = document.getElementById('emptyState');
+            if (!searchInput || !projects.length || !emptyState) return;
+
+            searchInput.addEventListener('input', function() {
+                const val = this.value.toLowerCase();
+                console.log('Searching projects with query:', val);
+                let visible = 0;
+                projects.forEach(p => {
+                    const title = p.querySelector('.project-title').textContent.toLowerCase();
+                    if (title.includes(val)) {
+                        p.style.display = 'flex';
+                        visible++;
+                    } else {
+                        p.style.display = 'none';
+                    }
+                });
+                emptyState.style.display = visible === 0 ? 'block' : 'none';
+                adjustCardHeights();
+                showFeedback(val ? `Searching for "${val}"` : 'Cleared search');
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded for page at', new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+            updateProjectFilter();
+            initProjectSearch();
+            adjustCardHeights();
+            window.addEventListener('resize', adjustCardHeights);
+        });
+    </script>
+</body>
+</html>
