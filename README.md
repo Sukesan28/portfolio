@@ -1,7 +1,7 @@
 # 🌐 Sukesan R Portfolio Website
 
 ## 📌 Project Overview
-Developed a *Personal Portfolio Website* to showcase my skills, projects, and achievements as a Java Developer and Front-End Developer. Built using *HTML, CSS, and JavaScript*, this project features a modern, responsive design with smooth navigation and interactive elements to highlight my technical expertise and professional journey.
+Developed a *Personal Portfolio Website* to showcase my skills, projects, and achievements as a Software Developer and Front-End Developer. Built using *HTML, CSS, and JavaScript(DOM)*, this project features a modern, responsive design with smooth navigation and interactive elements to highlight my technical expertise and professional journey.
 
 Key highlights:
 - 🖥 Fully responsive design for desktop and mobile devices
@@ -16,7 +16,7 @@ Key highlights:
 ### 🧠 Frontend (HTML, CSS, JS)
 - ✅ *HTML5*: Semantic structure with sections for About, Education, Skills, Projects, Achievements, and Contact
 - 🎨 *CSS3*: Custom styling with gradients, backdrop filters, hover effects, and responsive media queries
-- ⚡ *JavaScript*: Smooth scrolling, project filtering, typing animation, parallax effects, and scroll-based animations
+- ⚡ *JavaScript(DOM)*: Smooth scrolling, project filtering, typing animation, parallax effects, and scroll-based animations
 - 🎭 *Font Awesome*: Integrated via CDN for icons in navigation, project cards, and contact links
 
 ### 🚀 Navigation & Interactivity
